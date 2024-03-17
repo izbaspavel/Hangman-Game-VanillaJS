@@ -1,13 +1,6 @@
-// ========== URL API and Options ==========
-const url =
-  "https://random-word-by-api-ninjas.p.rapidapi.com/v1/randomword?type=noun";
-const options = {
-  method: "GET",
-  headers: {
-    "X-RapidAPI-Key": "ba36599aaemshbee5e6532b6a0c6p1cd69bjsndf3815f32a05",
-    "X-RapidAPI-Host": "random-word-by-api-ninjas.p.rapidapi.com",
-  },
-};
+// ========== URL APIs ==========
+const wordUrl = "https://random-word-api.herokuapp.com/word";
+const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
 // ========== DOM Variables ==========
 const keyboard = document.querySelector(".keyboard");
@@ -25,7 +18,7 @@ const modalCover = document.querySelector(".cover");
 const modalButton = document.querySelector(".modalButton");
 
 // ========== Aplication Variables ==========
-let secretWord = "",
+let secretWord = "a",
   disabledLetters,
   correctLetters,
   tries,
@@ -35,13 +28,12 @@ let secretWord = "",
   timeCounter;
 
 // Create keyboard on screen
-const generateKeyboard = () => {
+(function generateKeyboard() {
   for (let i = 65; i < 91; i++) {
     const letter = String.fromCharCode(i);
     keyboard.innerHTML += `<button class='letter'>${letter}</button>`;
   }
-};
-generateKeyboard();
+})();
 
 // initiate Game
 async function initiateGame() {
@@ -50,12 +42,24 @@ async function initiateGame() {
   tries = 0;
   time = 0;
   timer.style.height = "0";
+
   getHangmanImage(0);
+
   letterButtons.forEach((letterButton) => {
     letterButton.disabled = false;
   });
-  secretWord = await getRandomWord();
-  hintText.innerText = await getHint();
+
+  let wordDefinition = false;
+  while (
+    !wordDefinition ||
+    wordDefinition.length > 120 ||
+    secretWord.length > 10
+  ) {
+    secretWord = await getRandomWord();
+    wordDefinition = await getHint();
+  }
+
+  hintText.innerText = wordDefinition;
   timeCounter = setInterval(countTime, 1000);
   getWordDisplayTemplate();
 }
@@ -63,6 +67,7 @@ async function initiateGame() {
 // Set the timer
 function countTime() {
   time++;
+
   if (time % 6 === 0) {
     timer.style.height = `${time * (100 / 60)}%`;
   }
@@ -79,9 +84,9 @@ function countTime() {
 
 async function getRandomWord() {
   try {
-    word = await fetch(url, options)
+    word = await fetch(wordUrl)
       .then((response) => response.json())
-      .then((data) => data.word.toUpperCase());
+      .then((data) => data[0].toUpperCase());
   } catch {
     (err) => console.log("Error1##", err);
   }
@@ -90,14 +95,12 @@ async function getRandomWord() {
 
 async function getHint() {
   try {
-    return await fetch(
-      `https://api.dictionaryapi.dev/api/v2/entries/en/${secretWord}`
-    )
+    return await fetch(`${dictionaryUrl}${secretWord}`)
       .then((response) => response.json())
-      .then((data) => data[0].meanings[0].definitions[0].definition)
-      .catch((err) => `You don't need a hint `);
+      .then((data) => data[0].meanings[0].definitions[0].definition);
   } catch (err) {
     console.log("Error", err);
+    return false;
   }
 }
 
@@ -140,6 +143,7 @@ modalButton.addEventListener("click", () => {
 const game = (letter) => {
   console.log(secretWord);
   console.log(letter);
+
   disabledLetters.push(letter);
   secretWord.includes(letter) ? getCorrectGuess(letter) : getWrongGuess();
   if (secretWord.length === correctLetters.length)
@@ -176,8 +180,12 @@ const getCorrectGuess = (letter) => {
 const getWrongGuess = () => {
   tries++;
   // triesText.innerText = tries;
-  getHangmanImage(tries);
-  points--;
+  if (tries <= 6) {
+    getHangmanImage(tries);
+    points--;
+  } else {
+    getHangmanImage(6);
+  }
 };
 
 const getHangmanImage = (number) => {
