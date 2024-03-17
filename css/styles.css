@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Reggae+One&display=swap");
+
+:root {
+  --primaryFontFamily: "Reggae One";
+  --secondaryFontFamily: "Black Ops One";
+  --mainFontSize: 1.5rem;
+  --textMainColor: rgb(6, 13, 13);
+  --textButtonColor: rgb(250, 249, 246);
+  --mainColor: rgb(128, 188, 189);
+  font-family: "Reggae One";
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+}
+
+body {
+  background-color: var(--mainColor);
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 1900px;
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: calc(var(--mainFontSize) * 1.5);
+
+  color: var(--textMainColor);
+  /* delete border  */
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  background-color: rgb(170, 217, 187);
+  border-radius: 20px 20px 0 0;
+}
+
+h1 {
+  font-family: var(--secondaryFontFamily);
+  font-weight: 800;
+  text-align: center;
+  font-size: calc(var(--mainFontSize) * 2);
+}
+
+.userInfo {
+  display: flex;
+
+  align-items: center;
+  height: 4rem;
+  padding: 10px;
+  /* justify-content: space-around; */
+}
+
+.totalPoints {
+  width: 50%;
+  text-align: end;
+  padding-right: 5%;
+}
+
+.stars {
+  width: 40%;
+  text-align: start;
+  padding-left: 5%;
+}
+
+main {
+  display: flex;
+  align-items: self-end;
+  min-height: 80vh;
+  /* flex-wrap: wrap; */
+  padding: 1rem;
+  gap: 1rem;
+  font-size: calc(var(--mainFontSize) * 1.5);
+  background-color: rgb(234, 237, 204);
+  border-radius: 0 0 20px 20px;
+  /* box-shadow: 5px 11px 15px 5px #97ff0a, -5px 11px 15px 5px #97ff0a; */
+}
+
+.hangmanImageContainer {
+  position: relative;
+  width: 40%;
+  height: 100%;
+  padding: 1rem;
+  background-color: rgb(249, 247, 201);
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.imageWrapper {
+  margin-top: 3.2rem;
+  position: relative;
+  flex-grow: 1;
+  height: 100%;
+  width: 100%;
+  /* padding: 1rem; */
+  justify-self: flex-end;
+  align-self: flex-end;
+}
+
+.hangmanImage {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: block;
+  height: inherit;
+  width: inherit;
+}
+
+.lives {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  margin: 0.5rem auto;
+  top: 10%;
+  left: 0%;
+  font-size: 2rem;
+  display: flex;
+}
+
+.game-box {
+  width: 60%;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.word-display {
+  margin: 0 auto;
+}
+
+.secretLetter {
+  font-family: var(--secondaryFontFamily);
+  font-weight: bold;
+  display: inline-block;
+  padding-bottom: 0.5rem;
+  margin: 0.5rem;
+  width: 3rem;
+  text-align: center;
+}
+
+.hint {
+  text-align: justify;
+  margin: 2rem auto;
+  overflow: auto;
+}
+
+.keyboard {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px 5px;
+}
+
+.letter {
+  width: calc((100% - 40px) / 9);
+  height: 3rem;
+  font-family: var(--primaryFontFamily);
+  font-weight: 800;
+  border-radius: 1rem;
+  background-color: rgb(100, 151, 177);
+  font-size: var(--mainFontSize);
+  transition: background-color 0.4s ease-out;
+  /* border: transparent; */
+}
+
+.letter:hover {
+  background-color: rgb(179, 205, 224);
+}
+
+.letter:disabled {
+  pointer-events: none;
+}
+
+/* Media querires */
+@media only screen and (max-width: 1479px) {
+  :root {
+    font-size: 16px;
+  }
+  .secretLetter {
+    /* font-size: 1.8rem; */
+    width: 2.2rem;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  :root {
+    font-size: 14px;
+  }
+
+  .secretLetter {
+    width: 1.6rem;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  :root {
+    font-size: 12px;
+  }
+  main {
+    flex-direction: column;
+  }
+  .hangmanImageContainer {
+    width: 100%;
+    height: 30%;
+    padding: 0;
+  }
+  .imageWrapper {
+    margin: 0.5rem;
+  }
+  .hangmanImage {
+    height: inherit;
+  }
+  .game-box {
+    height: 70%;
+    width: 100%;
+  }
+  .secretLetter {
+    width: 1.7rem;
+  }
+  .lives {
+    position: absolute;
+    height: 80%;
+    margin: 0;
+    font-size: 1.5rem;
+    left: 2%;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+}

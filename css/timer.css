@@ -1,0 +1,57 @@
+.timerContainer {
+  position: absolute;
+  padding: 0.3rem;
+  top: -15%;
+  right: 47%;
+  width: 2rem;
+  height: 40%;
+  background: black;
+  transform: rotate(90deg);
+}
+
+.multicolor {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 0, 1) 0%,
+    rgba(255, 255, 0, 1) 50%,
+    rgba(255, 0, 0, 1) 100%
+  );
+}
+
+.timer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    black,
+    black 2%,
+    transparent 2%,
+    transparent 8%,
+    black 8%,
+    black 10%
+  );
+}
+
+.timerCover {
+  position: absolute;
+  width: 100%;
+  height: 0%;
+  background-color: rgba(0, 0, 0, 1);
+}
+
+@media only screen and (max-width: 767px) {
+  .timerContainer {
+    position: absolute;
+    padding: 0.3rem;
+    top: 10%;
+    right: 2%;
+    width: 2rem;
+    height: 80%;
+    background: black;
+    transform: rotate(0);
+  }
+}

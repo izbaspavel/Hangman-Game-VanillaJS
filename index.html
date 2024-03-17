@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hangman Game</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="timer.css" />
+    <link rel="stylesheet" href="modal.css" />
+  </head>
+  <body>
+    <header>
+      <h1>HANGMAN GAME</h1>
+      <section class="userInfo">
+        <p class="totalPoints">Score: <span class="points"> 60 </span></p>
+        <p class="stars">⭐⭐⭐</p>
+      </section>
+    </header>
+
+    <main>
+      <section class="hangmanImageContainer">
+        <div class="imageWrapper">
+          <img class="hangmanImage" src="images/hangman-0.svg" alt="" />
+        </div>
+        <section class="timerContainer">
+          <div class="multicolor">
+            <div class="timer">
+              <div class="timerCover"></div>
+            </div>
+          </div>
+        </section>
+        <div class="lives">
+          <p class="heart">💗</p>
+          <p class="heart">💗</p>
+          <p class="heart">💗</p>
+          <p class="heart">💗</p>
+          <p class="heart">💗</p>
+          <p class="heart">💗</p>
+        </div>
+      </section>
+      <section class="game-box">
+        <ul class="word-display">
+          <!-- <li class="secretLetter">A</li>
+          <li class="secretLetter">B</li>
+          <li class="secretLetter">R</li>
+          <li class="secretLetter">A</li>
+          <li class="secretLetter">C</li>
+          <li class="secretLetter">A</li>
+          <li class="secretLetter">D</li>
+          <li class="secretLetter">A</li>
+          <li class="secretLetter">B</li>
+          <li class="secretLetter">R</li> -->
+        </ul>
+        <p class="hint">
+          Hint:
+          <span class="generatedHint">HERE MUST BE THE HINT </span>
+        </p>
+        <article class="keyboard">
+          <!-- <button class="letter">A</button>
+          <button class="letter">B</button>
+          <button class="letter">C</button>
+          <button class="letter">D</button>
+          <button class="letter">E</button>
+          <button class="letter">F</button>
+          <button class="letter">G</button>
+          <button class="letter">H</button>
+          <button class="letter">I</button>
+          <button class="letter">J</button>
+          <button class="letter">K</button>
+          <button class="letter">L</button>
+          <button class="letter">M</button>
+          <button class="letter">N</button>
+          <button class="letter">O</button>
+          <button class="letter">P</button>
+          <button class="letter">Q</button>
+          <button class="letter">R</button>
+          <button class="letter">S</button>
+          <button class="letter">T</button>
+          <button class="letter">U</button>
+          <button class="letter">V</button>
+          <button class="letter">W</button>
+          <button class="letter">X</button>
+          <button class="letter">Y</button>
+          <button class="letter">z</button> -->
+        </article>
+      </section>
+    </main>
+
+    <div class="cover hidden"></div>
+    <section class="modalWindow hidden">
+      <div class="modalImage">
+        <img src="images/hangman-win.gif" alt="hangman GIF" />
+      </div>
+      <div class="modalText">
+        <h2>You Won!!!</h2>
+        <p>The correct word was: <strong>abracadabra</strong></p>
+        <button class="modalButton">
+          <span class="front"> Play Again </span>
+        </button>
+      </div>
+    </section>
+
+    <!-- <script src="wordlist.js"></script> -->
+    <script src="script.js"></script>
+  </body>
+</html>
