@@ -4,9 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hangman Game</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.ico" />
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/timer.css" />
     <link rel="stylesheet" href="css/modal.css" />
+    <script
+      src="https://kit.fontawesome.com/f903a6627d.js"
+      crossorigin="anonymous"
+    ></script>
   </head>
   <body>
     <header>
@@ -30,12 +35,14 @@
           </div>
         </section>
         <div class="lives">
-          <p class="heart">💗</p>
-          <p class="heart">💗</p>
-          <p class="heart">💗</p>
-          <p class="heart">💗</p>
-          <p class="heart">💗</p>
-          <p class="heart">💗</p>
+          <i class="fa-solid fa-heart heart"></i>
+          <i class="fa-solid fa-heart heart"></i>
+          <i class="fa-solid fa-heart heart"></i>
+          <i class="fa-solid fa-heart heart"></i>
+          <i class="fa-solid fa-heart heart"></i>
+          <i class="fa-solid fa-heart heart"></i>
+          <!-- <p class="heart">💗</p>
+          <p class="heart">💗</p> -->
         </div>
       </section>
       <section class="game-box">
@@ -51,10 +58,7 @@
           <li class="secretLetter">B</li>
           <li class="secretLetter">R</li> -->
         </ul>
-        <p class="hint">
-          Hint:
-          <span class="generatedHint">HERE MUST BE THE HINT </span>
-        </p>
+        <p class="hint"></p>
         <article class="keyboard">
           <!-- <button class="letter">A</button>
           <button class="letter">B</button>
@@ -100,7 +104,6 @@
       </div>
     </section>
 
-    <!-- <script src="js/wordlist.js"></script> -->
     <script src="js/script.js"></script>
   </body>
 </html>

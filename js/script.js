@@ -4,12 +4,13 @@ const dictionaryUrl = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
 // ========== DOM Variables ==========
 const keyboard = document.querySelector(".keyboard");
-const hintText = document.querySelector(".generatedHint");
+const hintText = document.querySelector(".hint");
 const pointsText = document.querySelector(".points");
 const hangmanImage = document.querySelector(".hangmanImage");
 const display = document.querySelector(".word-display");
 const timer = document.querySelector(".timerCover");
 const starText = document.querySelector(".stars");
+const hearts = document.querySelectorAll(".heart");
 
 const modalImage = document.querySelector(".modalImage img");
 const modalText = document.querySelector(".modalText h2");
@@ -18,16 +19,18 @@ const modalCover = document.querySelector(".cover");
 const modalButton = document.querySelector(".modalButton");
 
 // ========== Aplication Variables ==========
-let secretWord = "a",
+let secretWord,
   disabledLetters,
   correctLetters,
   tries,
   time,
   points = 60,
-  totalLives = 6,
-  timeCounter;
+  timeCounter,
+  starsNumber = 3;
+const totalLives = 6;
 
-// Create keyboard on screen
+// Generate virtual keyboard interface
+
 (function generateKeyboard() {
   for (let i = 65; i < 91; i++) {
     const letter = String.fromCharCode(i);
@@ -35,20 +38,38 @@ let secretWord = "a",
   }
 })();
 
-// initiate Game
+const letterButtons = document.querySelectorAll(".letter");
+
+// Start the game initialization process
+
 async function initiateGame() {
   correctLetters = [];
   disabledLetters = [];
   tries = 0;
   time = 0;
   timer.style.height = "0";
-
+  display.innerText = "";
+  hintText.innerText = "";
   getHangmanImage(0);
+
+  hearts.forEach((heart) => {
+    heart.classList.remove("hideHeart");
+  });
+
+  await getWordAndDefinition();
+  getWordDisplayTemplate();
+
+  timeCounter = setInterval(countTime, 1000);
 
   letterButtons.forEach((letterButton) => {
     letterButton.disabled = false;
+    letterButton.addEventListener("click", getVirtualKeyboardLetter);
   });
+  window.addEventListener("keydown", getPhysicKeyboardLetter);
+}
 
+// Get Functions
+const getWordAndDefinition = async () => {
   let wordDefinition = false;
   while (
     !wordDefinition ||
@@ -58,31 +79,10 @@ async function initiateGame() {
     secretWord = await getRandomWord();
     wordDefinition = await getHint();
   }
+  hintText.innerText = `Hint : ${wordDefinition}`;
+};
 
-  hintText.innerText = wordDefinition;
-  timeCounter = setInterval(countTime, 1000);
-  getWordDisplayTemplate();
-}
-
-// Set the timer
-function countTime() {
-  time++;
-
-  if (time % 6 === 0) {
-    timer.style.height = `${time * (100 / 60)}%`;
-  }
-  if (time === 60) {
-    win(false);
-  }
-}
-
-// const getRandomWord = () => {
-// const { word, hint } = wordList[Math.floor(Math.random() * wordList.length)];
-// secretWord = word.toUpperCase();
-// hintText.innerText = hint;
-// };
-
-async function getRandomWord() {
+const getRandomWord = async () => {
   try {
     word = await fetch(wordUrl)
       .then((response) => response.json())
@@ -91,9 +91,9 @@ async function getRandomWord() {
     (err) => console.log("Error1##", err);
   }
   return word;
-}
+};
 
-async function getHint() {
+const getHint = async () => {
   try {
     return await fetch(`${dictionaryUrl}${secretWord}`)
       .then((response) => response.json())
@@ -102,7 +102,7 @@ async function getHint() {
     console.log("Error", err);
     return false;
   }
-}
+};
 
 const getWordDisplayTemplate = () => {
   console.log(secretWord);
@@ -110,61 +110,6 @@ const getWordDisplayTemplate = () => {
     .split("")
     .map(() => `<li class='secretLetter'>-</li>`)
     .join("");
-};
-
-// Event Listeners
-const letterButtons = document.querySelectorAll(".letter");
-letterButtons.forEach((letterButton) => {
-  letterButton.addEventListener("click", (e) => {
-    letterButton.disabled = true;
-    game(e.target.innerText);
-  });
-});
-
-window.addEventListener("keydown", (e) => {
-  const upperCaseLetter = e.key.toUpperCase();
-  const letterCharCode = upperCaseLetter.charCodeAt(0);
-  if (
-    letterCharCode >= 65 &&
-    letterCharCode <= 90 &&
-    !disabledLetters.includes(upperCaseLetter)
-  ) {
-    letterButtons[letterCharCode - 65].disabled = true;
-    game(upperCaseLetter);
-  }
-});
-
-modalButton.addEventListener("click", () => {
-  document.querySelector(".modalWindow").classList.add("hidden");
-  modalCover.classList.add("hidden");
-  initiateGame();
-});
-
-const game = (letter) => {
-  console.log(secretWord);
-  console.log(letter);
-
-  disabledLetters.push(letter);
-  secretWord.includes(letter) ? getCorrectGuess(letter) : getWrongGuess();
-  if (secretWord.length === correctLetters.length)
-    setTimeout(() => win(true), 1000);
-  if (tries === totalLives) setTimeout(() => win(false), 1000);
-  points = points > 0 ? points : 0;
-  pointsText.innerText = points;
-
-  let stars = Math.floor(points / 20);
-  starText.innerText =
-    stars >= 5
-      ? "⭐⭐⭐⭐⭐"
-      : stars === 4
-      ? "⭐⭐⭐⭐"
-      : stars === 3
-      ? "⭐⭐⭐"
-      : stars === 2
-      ? "⭐⭐"
-      : stars === 1
-      ? "⭐"
-      : "";
 };
 
 const getCorrectGuess = (letter) => {
@@ -179,23 +124,69 @@ const getCorrectGuess = (letter) => {
 
 const getWrongGuess = () => {
   tries++;
-  // triesText.innerText = tries;
-  if (tries <= 6) {
-    getHangmanImage(tries);
-    points--;
-  } else {
-    getHangmanImage(6);
-  }
+  hearts[6 - tries].classList.add("hideHeart");
+  getHangmanImage(tries);
+  points--;
 };
 
 const getHangmanImage = (number) => {
   hangmanImage.src = `images/hangman-${number}.svg`;
 };
 
+const getStarsNumber = () => {
+  if (starsNumber < Math.floor(points / 20) && starsNumber < 5) {
+    starsNumber++;
+    console.log(starsNumber);
+    starText.innerText += "⭐";
+  } else if (starsNumber > Math.floor(points / 20) && starsNumber > 0) {
+    starsNumber--;
+    starText.innerText = starText.innerText.slice(1);
+  }
+};
+
+const getVirtualKeyboardLetter = (e) => {
+  e.target.disabled = true;
+  game(e.target.innerText);
+};
+
+const getPhysicKeyboardLetter = (e) => {
+  const upperCaseLetter = e.key.toUpperCase();
+  const letterCharCode = upperCaseLetter.charCodeAt(0);
+  if (
+    letterCharCode >= 65 &&
+    letterCharCode <= 90 &&
+    !disabledLetters.includes(upperCaseLetter)
+  ) {
+    letterButtons[letterCharCode - 65].disabled = true;
+    game(upperCaseLetter);
+  }
+};
+
+const game = (letter) => {
+  disabledLetters.push(letter);
+  secretWord.includes(letter) ? getCorrectGuess(letter) : getWrongGuess();
+  if (secretWord.length === correctLetters.length) checkWin(true);
+  if (tries === totalLives) checkWin(false);
+
+  points = points > 0 ? points : 0;
+  pointsText.innerText = points;
+
+  getStarsNumber();
+};
+
+const checkWin = (boolean) => {
+  letterButtons.forEach((letterButton) => {
+    letterButton.removeEventListener("click", getVirtualKeyboardLetter);
+  });
+  removeEventListener("keydown", getPhysicKeyboardLetter);
+  setTimeout(() => win(boolean), 1000);
+};
+
 const win = (boolean) => {
   points = boolean ? points + 5 : points - 5;
   points = points > 0 ? points : 0;
   pointsText.innerText = points;
+  getStarsNumber();
 
   document.querySelector(".modalWindow").classList.remove("hidden");
   modalCover.classList.remove("hidden");
@@ -207,5 +198,27 @@ const win = (boolean) => {
   modalCorrectWord.style.color = boolean ? "green" : "red";
   clearTimeout(timeCounter);
 };
+
+// Set the timer
+function countTime() {
+  time++;
+
+  if (time % 6 === 0) {
+    timer.style.height = `${time * (100 / 60)}%`;
+  }
+  if (time === 60) {
+    win(false);
+  }
+}
+
+// Event Listeners
+
+modalButton.addEventListener("click", () => {
+  document.querySelector(".modalWindow").classList.add("hidden");
+  modalCover.classList.add("hidden");
+  initiateGame();
+});
+
+// Calling the beginning of the game
 
 initiateGame();
